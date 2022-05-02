@@ -1,6 +1,6 @@
 from error_handling.console_logger import ConsoleLogger
 from experiments.device_configuration import DeviceConfiguration
-from dataset.vctk_features_stream import VCTKFeaturesStream
+from dataset.features_stream import FeaturesStream
 
 import librosa
 import numpy as np
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     with open(configuration_file_path, 'r') as configuration_file:
         configuration = yaml.load(configuration_file, Loader=yaml.FullLoader)
     device_configuration = DeviceConfiguration.load_from_configuration(configuration)
-    data_stream = VCTKFeaturesStream('../data/vctk', configuration, device_configuration.gpu_ids, device_configuration.use_cuda)
+    data_stream = FeaturesStream('../data/' + configuration.dataset_name, configuration, device_configuration.gpu_ids, device_configuration.use_cuda)
 
     res_type = 'kaiser_fast'
     top_db = 20

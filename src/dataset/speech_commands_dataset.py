@@ -36,7 +36,7 @@ import os
 import textgrid
 
 
-class VCTKDataset(Dataset):
+class SpeechCommandsDataset(Dataset):
 
     def __init__(self, audios, speaker_dic, utterences, configuration):
         self._audios = audios
@@ -123,9 +123,7 @@ class VCTKDataset(Dataset):
         )
 
         quantized = MuLaw.encode(audio)
-
         speaker = pathlib.Path(wav_filename).parent.name
-
         speaker_id = np.array(self._speaker_dic[speaker], dtype=np.long)
 
         preprocessed_audio, one_hot, quantized, start_trimming = self._preprocessing(audio, quantized)

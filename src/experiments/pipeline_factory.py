@@ -30,7 +30,7 @@ from experiments.convolutional_trainer import ConvolutionalTrainer
 from experiments.evaluator import Evaluator
 from models.convolutional_vq_vae import ConvolutionalVQVAE
 from error_handling.console_logger import ConsoleLogger
-from dataset.vctk_features_stream import VCTKFeaturesStream
+from dataset.features_stream import FeaturesStream
 
 from torch import nn
 import torch.optim as optim
@@ -43,7 +43,7 @@ class PipelineFactory(object):
 
     @staticmethod
     def build(configuration, device_configuration, experiments_path, experiment_name, results_path):
-        data_stream = VCTKFeaturesStream('../data/vctk', configuration, device_configuration.gpu_ids, device_configuration.use_cuda)
+        data_stream = FeaturesStream('../data/'+configuration['dataset_name'], configuration, device_configuration.gpu_ids, device_configuration.use_cuda)
 
         if configuration['decoder_type'] == 'deconvolutional':
             vqvae_model = ConvolutionalVQVAE(configuration, device_configuration.device).to(device_configuration.device)
@@ -109,7 +109,7 @@ class PipelineFactory(object):
 
             # Load the data stream
             ConsoleLogger.status('Loading the data stream')
-            data_stream = VCTKFeaturesStream(data_path + os.sep + 'vctk', configuration, device_configuration.gpu_ids, device_configuration.use_cuda)
+            data_stream = FeaturesStream(data_path + os.sep+configuration.dataset_name, configuration, device_configuration.gpu_ids, device_configuration.use_cuda)
 
             def load_state_dicts(model, checkpoint, model_name, optimizer_name):
                 # Load the state dict from the checkpoint to the model

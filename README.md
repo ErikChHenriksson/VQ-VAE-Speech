@@ -120,7 +120,7 @@ Example of experiment file:
 {
     "experiments_path": "../experiments",
     "results_path": "../results",
-    "configuration_path": "../configurations/vctk_features.yaml",
+    "configuration_path": "../configurations/speech_commands.yaml",
     "seed": 1234,
     "experiments": {    
         "baseline": {

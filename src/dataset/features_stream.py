@@ -24,7 +24,7 @@
  #   SOFTWARE.                                                                       #
  #####################################################################################
 
-from dataset.vctk_features_dataset import VCTKFeaturesDataset
+from dataset.features_dataset import FeaturesDataset
 from error_handling.console_logger import ConsoleLogger
 from error_handling.logger_factory import LoggerFactory
 from . import LOG_PATH
@@ -38,16 +38,17 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
-class VCTKFeaturesStream(object):
+class FeaturesStream(object):
 
-    def __init__(self, vctk_path, configuration, gpu_ids, use_cuda):
+    def __init__(self, path, configuration, gpu_ids, use_cuda):
         self._normalizer = None
         if configuration['normalize']:
             with open(configuration['normalizer_path'], 'rb') as file:
                 self._normalizer = pickle.load(file)
 
-        self._training_data = VCTKFeaturesDataset(vctk_path, 'train', self._normalizer, features_path=configuration['features_path'])
-        self._validation_data = VCTKFeaturesDataset(vctk_path, 'val', self._normalizer, features_path=configuration['features_path'])
+        print("dataset path", path)
+        self._training_data = FeaturesDataset(path, 'train', self._normalizer, features_path=configuration['features_path'])
+        self._validation_data = FeaturesDataset(path, 'val', self._normalizer, features_path=configuration['features_path'])
         factor = 1 if len(gpu_ids) == 0 else len(gpu_ids)
 
         factor = 1 # FIXME
@@ -67,8 +68,8 @@ class VCTKFeaturesStream(object):
             num_workers=configuration['num_workers'],
             pin_memory=use_cuda
         )
-        self._speaker_dic = self._make_speaker_dic(vctk_path + os.sep + 'raw' + os.sep + 'VCTK-Corpus')
-        self._vctk_path = vctk_path
+        self._speaker_dic = self._make_speaker_dic(path + os.sep + 'raw' + os.sep + 'VCTK-Corpus')
+        self._vctk_path = path
         self._logger = LoggerFactory.create(LOG_PATH, __name__)
         self._normalizer_path = configuration['normalizer_path']
 

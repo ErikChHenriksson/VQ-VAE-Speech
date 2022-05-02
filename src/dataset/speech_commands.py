@@ -51,22 +51,30 @@ def load_txts(dir):
                         utterences[fname_no_ext] = f.readline()
     return utterences
 
-class VCTK(Dataset):
-    url = 'https://datashare.is.ed.ac.uk/bitstream/handle/10283/3443/VCTK-Corpus-0.92.zip'
-    dset_path = 'VCTK-Corpus'
+class SpeechCommands(Dataset):
+    url = 'https://storage.googleapis.com/download.tensorflow.org/data/speech_commands_v0.02.tar.gz'
+    dset_path = 'speech_commands'
 
     def make_speaker_dic(self, root):
-        speakers = [
-            str(speaker.name) for speaker in pathlib.Path(root).glob('wav48/*/')]
-        speakers = sorted([speaker for speaker in speakers])
-        speaker_dic = {speaker: i for i, speaker in enumerate(speakers)}
+        print("")
+        print("SPEAKER DICT PATH", pathlib.Path(root))
+        commands = [
+            str(command.name) for command in pathlib.Path(root).glob('*/')]
+        commands = sorted([command for command in commands])
+        speaker_dic = {command: i for i, command in enumerate(commands)}
+        print("speaker_dic", speaker_dic)
+        print("")
         return speaker_dic
 
     def __init__(self, root, downsample=True, transform=None, target_transform=None, download=True, dev_mode=False, ratio=0.8):
-        super(VCTK, self).__init__()
+        super(SpeechCommands, self).__init__()
 
         self.root = os.path.expanduser(root)
-        self.raw_folder = '../data/vctk/raw'
+        print("root:" , root , "added by Jannik in speech_commands")
+        print("self.root:" , self.root , "added by Jannik in speech_commands")
+        print("ls:" , os.listdir() , "added by Jannik in speech_commands")
+        print()
+        self.raw_folder = '/data/speech_commands/raw'
         if os.path.isdir('..' + os.sep + self.raw_folder):
             self.raw_folder = '..' + os.sep + self.raw_folder
         self.downsample = downsample
@@ -125,9 +133,13 @@ class VCTK(Dataset):
         print('Downloading ' + url)
         filename = url.rpartition('/')[2]
         file_path = os.path.join(self.root, self.raw_folder, filename)
+
+        print("dset_abs_path", dset_abs_path)
         if not os.path.isfile(file_path):
+            print("file_path", file_path, "is not a file")
             urllib.request.urlretrieve(url, file_path)
         if not os.path.exists(dset_abs_path):
+            print("ospath", dset_abs_path, "does not exist")
             with tarfile.open(file_path) as zip_f:
                 zip_f.extractall(raw_abs_dir)
         else:
@@ -136,6 +148,6 @@ class VCTK(Dataset):
             os.unlink(file_path)
 
         shutil.copyfile(
-            os.path.join(dset_abs_path, "COPYING"),
+            file_path, file_path
         )
         print('Done!')

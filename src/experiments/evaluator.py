@@ -40,6 +40,8 @@ import textgrid
 from tqdm import tqdm
 import pickle
 
+from src.dataset.speech_commands import SpeechCommands
+
 
 class Evaluator(object):
 
@@ -48,7 +50,7 @@ class Evaluator(object):
         self._model = model
         self._data_stream = data_stream
         self._configuration = configuration
-        self._vctk = VCTK(self._configuration['data_root'], ratio=self._configuration['train_val_split'])
+        self._vctk = SpeechCommands(self._configuration['data_root'], ratio=self._configuration['train_val_split'])
         self._results_path = results_path
         self._experiment_name = experiment_name
 

@@ -30,7 +30,7 @@ import os
 import numpy as np
 
 
-class VCTKFeaturesDataset(Dataset):
+class FeaturesDataset(Dataset):
 
     def __init__(self, vctk_path, subdirectory, normalizer=None, features_path='features'):
         self._vctk_path = vctk_path
